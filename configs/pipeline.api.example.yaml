@@ -1,0 +1,38 @@
+generation:
+  provider: openai_compatible
+  scenario_path: examples/mini_scenarios.jsonl
+  output_path: outputs/api_demo/dialogues.json
+  tree_depth: 2
+  branch_factor: 3
+  seed: 13
+  llm:
+    # Examples:
+    #   https://api.openai.com/v1
+    #   https://dashscope.aliyuncs.com/compatible-mode/v1
+    #   https://api.siliconflow.cn/v1
+    base_url: https://api.openai.com/v1
+    api_key_env: OPENAI_API_KEY
+    model: gpt-4o-mini
+    temperature: 0.7
+    max_retries: 3
+    sleep_s: 0
+
+tts:
+  api_url_env: HIGGS_TTS_API_URL
+  api_url: ""
+  audio_dir: outputs/api_demo/audio_raw
+  manifest_path: outputs/api_demo/tts_manifest.json
+  timeout_s: 120
+  max_retries: 3
+
+snapshot:
+  snapshot_id: api-demo-v0
+  output_path: outputs/api_demo/snapshot_manifest.json
+
+evaluation:
+  base_url: https://api.openai.com/v1
+  api_key_env: OPENAI_API_KEY
+  model: gpt-4o-mini
+  prompt_language: cn
+  output_path: outputs/api_demo/text_eval_results.json
+  sleep_s: 0

@@ -1,0 +1,17 @@
+Research Use License
+
+Copyright (c) 2026 TeleAntiFraud 2.0 Authors
+
+This code is released for academic research and benchmark reproduction.
+Generated fraud-dialogue or fraud-audio artifacts must remain labeled as
+synthetic anti-fraud benchmark data and must not be redistributed as ordinary
+speech data.
+
+You may use, modify, and share this code for non-commercial research,
+evaluation, and reproducibility. You may not use this code or generated
+artifacts to build, train, or deploy systems intended to commit fraud,
+impersonation, social engineering, or other harmful activity.
+
+Full benchmark audio, private reference voices, model checkpoints, API keys,
+and provider response logs are not covered by this code release unless
+separately licensed.

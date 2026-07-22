@@ -1,0 +1,26 @@
+generation:
+  scenario_path: examples/mini_scenarios.jsonl
+  output_path: outputs/demo/dialogues.json
+  tree_depth: 2
+  branch_factor: 3
+  seed: 13
+
+tts:
+  api_url_env: HIGGS_TTS_API_URL
+  api_url: ""
+  audio_dir: outputs/demo/audio_raw
+  manifest_path: outputs/demo/tts_manifest.json
+  timeout_s: 120
+  max_retries: 3
+
+snapshot:
+  snapshot_id: demo-v0
+  output_path: outputs/demo/snapshot_manifest.json
+
+evaluation:
+  base_url: https://api.openai.com/v1
+  api_key_env: OPENAI_API_KEY
+  model: gpt-4o-mini
+  prompt_language: cn
+  output_path: outputs/demo/text_eval_results.json
+  sleep_s: 0
