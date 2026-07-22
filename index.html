@@ -1,0 +1,889 @@
+﻿<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="description" content="TeleAntiFraud 2.0: a versioned, profile-grounded, emotion-aware benchmark for audio-based telecom fraud detection.">
+  <title>TeleAntiFraud 2.0 | AAAI Submission</title>
+  <style>
+    :root {
+      --ink: #17202a;
+      --muted: #5f6b78;
+      --line: #d9e1e8;
+      --paper: #f7f9fb;
+      --white: #ffffff;
+      --blue: #1456a0;
+      --teal: #087b83;
+      --red: #b83c3c;
+      --gold: #a66f00;
+      --green: #2f7a45;
+      --shadow: 0 14px 40px rgba(23, 32, 42, 0.10);
+      --radius: 8px;
+    }
+
+    * {
+      box-sizing: border-box;
+    }
+
+    html {
+      scroll-behavior: smooth;
+    }
+
+    body {
+      margin: 0;
+      color: var(--ink);
+      font-family: Inter, ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Arial, sans-serif;
+      line-height: 1.55;
+      background: var(--paper);
+    }
+
+    a {
+      color: var(--blue);
+      text-decoration: none;
+    }
+
+    a:hover {
+      text-decoration: underline;
+    }
+
+    img {
+      display: block;
+      width: 100%;
+      height: auto;
+    }
+
+    .skip-link {
+      position: absolute;
+      left: -999px;
+      top: 8px;
+      padding: 8px 12px;
+      background: var(--ink);
+      color: var(--white);
+      z-index: 10;
+    }
+
+    .skip-link:focus {
+      left: 8px;
+    }
+
+    .site-header {
+      position: sticky;
+      top: 0;
+      z-index: 5;
+      border-bottom: 1px solid var(--line);
+      background: rgba(255, 255, 255, 0.94);
+      backdrop-filter: blur(14px);
+    }
+
+    .nav {
+      max-width: 1180px;
+      margin: 0 auto;
+      padding: 12px 24px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 18px;
+    }
+
+    .brand {
+      display: flex;
+      flex-direction: column;
+      gap: 0;
+      min-width: 180px;
+      color: var(--ink);
+      font-weight: 800;
+      letter-spacing: 0;
+    }
+
+    .brand span {
+      color: var(--muted);
+      font-size: 12px;
+      font-weight: 650;
+    }
+
+    .nav-links {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 6px 14px;
+      align-items: center;
+      justify-content: flex-end;
+      font-size: 14px;
+      font-weight: 650;
+    }
+
+    .hero {
+      background:
+        linear-gradient(120deg, rgba(247, 249, 251, 0.95), rgba(255, 255, 255, 0.86)),
+        url("paper_visual_assets_v5/Figure1_construction/preview/05_final_composite.png") center/cover no-repeat;
+      border-bottom: 1px solid var(--line);
+    }
+
+    .hero-inner {
+      max-width: 1180px;
+      margin: 0 auto;
+      padding: 86px 24px 38px;
+    }
+
+    .venue {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      margin-bottom: 18px;
+      padding: 7px 10px;
+      border: 1px solid rgba(20, 86, 160, 0.24);
+      border-radius: 999px;
+      color: var(--blue);
+      background: rgba(255, 255, 255, 0.86);
+      font-size: 13px;
+      font-weight: 750;
+    }
+
+    h1 {
+      max-width: 930px;
+      margin: 0;
+      font-size: clamp(36px, 6vw, 70px);
+      line-height: 0.98;
+      letter-spacing: 0;
+    }
+
+    .subtitle {
+      max-width: 820px;
+      margin: 24px 0 0;
+      color: #314151;
+      font-size: clamp(18px, 2.4vw, 23px);
+      line-height: 1.42;
+      font-weight: 520;
+    }
+
+    .authors {
+      margin-top: 18px;
+      color: var(--muted);
+      font-size: 15px;
+      font-weight: 650;
+    }
+
+    .actions {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 12px;
+      margin-top: 30px;
+    }
+
+    .button {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      min-height: 42px;
+      padding: 10px 16px;
+      border: 1px solid var(--ink);
+      border-radius: 6px;
+      color: var(--ink);
+      background: var(--white);
+      font-weight: 780;
+      line-height: 1.2;
+    }
+
+    .button.primary {
+      border-color: var(--blue);
+      color: var(--white);
+      background: var(--blue);
+    }
+
+    .button.disabled {
+      border-color: #b8c3ce;
+      color: #7c8792;
+      background: #edf1f5;
+      pointer-events: none;
+    }
+
+    .quick-stats {
+      display: grid;
+      grid-template-columns: repeat(4, minmax(0, 1fr));
+      gap: 12px;
+      max-width: 1180px;
+      margin: 0 auto;
+      padding: 0 24px 42px;
+    }
+
+    .stat {
+      border: 1px solid var(--line);
+      border-radius: var(--radius);
+      padding: 18px;
+      background: rgba(255, 255, 255, 0.93);
+      box-shadow: 0 8px 22px rgba(23, 32, 42, 0.05);
+    }
+
+    .stat strong {
+      display: block;
+      font-size: 26px;
+      line-height: 1.05;
+    }
+
+    .stat span {
+      display: block;
+      margin-top: 6px;
+      color: var(--muted);
+      font-size: 13px;
+      font-weight: 650;
+    }
+
+    main {
+      max-width: 1180px;
+      margin: 0 auto;
+      padding: 38px 24px 80px;
+    }
+
+    section {
+      margin-top: 54px;
+    }
+
+    section:first-child {
+      margin-top: 0;
+    }
+
+    .section-head {
+      display: grid;
+      grid-template-columns: minmax(0, 0.95fr) minmax(260px, 0.55fr);
+      gap: 34px;
+      align-items: end;
+      margin-bottom: 22px;
+    }
+
+    h2 {
+      margin: 0;
+      font-size: clamp(25px, 3.4vw, 38px);
+      line-height: 1.08;
+      letter-spacing: 0;
+    }
+
+    .lead {
+      margin: 12px 0 0;
+      color: #384858;
+      font-size: 18px;
+    }
+
+    .note {
+      color: var(--muted);
+      font-size: 14px;
+    }
+
+    .grid {
+      display: grid;
+      grid-template-columns: repeat(3, minmax(0, 1fr));
+      gap: 16px;
+    }
+
+    .grid.two {
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+    }
+
+    .card {
+      border: 1px solid var(--line);
+      border-radius: var(--radius);
+      padding: 20px;
+      background: var(--white);
+      box-shadow: 0 8px 24px rgba(23, 32, 42, 0.05);
+    }
+
+    .card h3 {
+      margin: 0 0 8px;
+      font-size: 18px;
+      line-height: 1.2;
+    }
+
+    .card p {
+      margin: 0;
+      color: var(--muted);
+    }
+
+    .tag-row {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 8px;
+      margin-top: 14px;
+    }
+
+    .tag {
+      display: inline-flex;
+      align-items: center;
+      min-height: 26px;
+      padding: 4px 8px;
+      border: 1px solid #cdd7e2;
+      border-radius: 999px;
+      color: #425160;
+      background: #f3f6f8;
+      font-size: 12px;
+      font-weight: 760;
+    }
+
+    .figure {
+      overflow: hidden;
+      border: 1px solid var(--line);
+      border-radius: var(--radius);
+      background: var(--white);
+      box-shadow: var(--shadow);
+    }
+
+    .figure img {
+      background: #f4f7fa;
+    }
+
+    .caption {
+      padding: 12px 14px 14px;
+      color: var(--muted);
+      font-size: 13px;
+      border-top: 1px solid var(--line);
+      background: var(--white);
+    }
+
+    .pipeline {
+      display: grid;
+      grid-template-columns: repeat(6, minmax(0, 1fr));
+      gap: 10px;
+      margin-top: 18px;
+    }
+
+    .step {
+      border: 1px solid #cfdbe6;
+      border-radius: var(--radius);
+      padding: 13px 12px;
+      background: var(--white);
+      min-height: 112px;
+    }
+
+    .step b {
+      display: block;
+      margin-bottom: 6px;
+      color: var(--blue);
+      font-size: 13px;
+      text-transform: uppercase;
+    }
+
+    .step span {
+      color: var(--muted);
+      font-size: 13px;
+    }
+
+    .table-wrap {
+      overflow-x: auto;
+      border: 1px solid var(--line);
+      border-radius: var(--radius);
+      background: var(--white);
+      box-shadow: 0 8px 24px rgba(23, 32, 42, 0.05);
+    }
+
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      min-width: 760px;
+      font-size: 14px;
+    }
+
+    th,
+    td {
+      padding: 12px 14px;
+      border-bottom: 1px solid var(--line);
+      text-align: left;
+      vertical-align: top;
+    }
+
+    th {
+      color: #314151;
+      background: #eef3f7;
+      font-size: 13px;
+      text-transform: uppercase;
+      letter-spacing: 0.02em;
+    }
+
+    tr:last-child td {
+      border-bottom: 0;
+    }
+
+    .behavior {
+      display: inline-flex;
+      align-items: center;
+      padding: 3px 7px;
+      border-radius: 999px;
+      color: var(--white);
+      font-size: 12px;
+      font-weight: 760;
+      white-space: nowrap;
+    }
+
+    .behavior.red {
+      background: var(--red);
+    }
+
+    .behavior.gold {
+      background: var(--gold);
+    }
+
+    .behavior.green {
+      background: var(--green);
+    }
+
+    .behavior.teal {
+      background: var(--teal);
+    }
+
+    .audio-list {
+      display: grid;
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+      gap: 14px;
+    }
+
+    .audio-item {
+      border: 1px solid var(--line);
+      border-radius: var(--radius);
+      padding: 16px;
+      background: var(--white);
+      box-shadow: 0 8px 24px rgba(23, 32, 42, 0.05);
+    }
+
+    .audio-item h3 {
+      margin: 0 0 4px;
+      font-size: 16px;
+    }
+
+    .audio-item p {
+      margin: 0 0 12px;
+      color: var(--muted);
+      font-size: 13px;
+    }
+
+    audio {
+      width: 100%;
+      height: 38px;
+    }
+
+    pre {
+      overflow-x: auto;
+      margin: 0;
+      padding: 18px;
+      border: 1px solid var(--line);
+      border-radius: var(--radius);
+      background: #101820;
+      color: #eef6ff;
+      font-size: 13px;
+      line-height: 1.45;
+    }
+
+    .footer {
+      max-width: 1180px;
+      margin: 0 auto;
+      padding: 26px 24px 46px;
+      color: var(--muted);
+      border-top: 1px solid var(--line);
+      font-size: 13px;
+    }
+
+    .todo {
+      display: inline-flex;
+      margin-left: 6px;
+      padding: 1px 6px;
+      border-radius: 4px;
+      background: #fff0bf;
+      color: #6b4a00;
+      font-size: 11px;
+      font-weight: 800;
+    }
+
+    @media (max-width: 920px) {
+      .nav {
+        align-items: flex-start;
+        flex-direction: column;
+      }
+
+      .nav-links {
+        justify-content: flex-start;
+      }
+
+      .quick-stats,
+      .grid,
+      .grid.two,
+      .section-head,
+      .audio-list {
+        grid-template-columns: 1fr;
+      }
+
+      .pipeline {
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+      }
+    }
+
+    @media (max-width: 560px) {
+      .hero-inner {
+        padding-top: 58px;
+      }
+
+      .actions {
+        flex-direction: column;
+      }
+
+      .button {
+        width: 100%;
+      }
+
+      .pipeline {
+        grid-template-columns: 1fr;
+      }
+    }
+  </style>
+</head>
+<body>
+  <a class="skip-link" href="#main">Skip to content</a>
+
+  <header class="site-header">
+    <nav class="nav" aria-label="Primary navigation">
+      <a class="brand" href="#">
+        TeleAntiFraud 2.0
+        <span>AAAI submission project page</span>
+      </a>
+      <div class="nav-links">
+        <a href="#overview">Overview</a>
+        <a href="#benchmark">Benchmark</a>
+        <a href="#results">Results</a>
+        <a href="#demo">Audio Demo</a>
+        <a href="#release">Release</a>
+        <a href="#citation">Citation</a>
+      </div>
+    </nav>
+  </header>
+
+  <div class="hero">
+    <div class="hero-inner">
+      <div class="venue">AAAI 2027 Submission</div>
+      <h1>TeleAntiFraud 2.0: A Dynamic, Profile-Grounded, and Emotion-Aware Benchmark for Audio-Based Telecom Fraud Detection</h1>
+      <p class="subtitle">
+        A versioned pure-test benchmark of Chinese call dialogues that asks models to separate scams from legitimate calls sharing the same risks, openings, and vocabulary.
+      </p>
+      <p class="authors">Huiyuan Liu, Zhiming Ma, and Shun Zhang*<br><span class="note">People's Public Security University of China · *Corresponding author</span></p>
+      <div class="actions">
+        <a class="button primary" href="paper_draft.pdf">Paper PDF</a>
+        <a class="button" href="#release">Code and Data</a>
+        <a class="button" href="#demo">Listen to Samples</a>
+        <a class="button disabled" href="#" aria-disabled="true">OpenReview Link TODO</a>
+      </div>
+    </div>
+
+    <div class="quick-stats" aria-label="Benchmark highlights">
+      <div class="stat">
+        <strong>900</strong>
+        <span>dialogues per frozen snapshot</span>
+      </div>
+      <div class="stat">
+        <strong>600 / 300</strong>
+        <span>fraud and near-domain non-fraud calls</span>
+      </div>
+      <div class="stat">
+        <strong>35</strong>
+        <span>role-matched synthetic speakers</span>
+      </div>
+      <div class="stat">
+        <strong>27</strong>
+        <span>direct-audio and ASR+LLM configurations</span>
+      </div>
+    </div>
+  </div>
+
+  <main id="main">
+    <section id="overview">
+      <div class="section-head">
+        <div>
+          <h2>Why This Benchmark Exists</h2>
+          <p class="lead">
+            Many fraud detectors score well when negatives are unrelated normal calls. TeleAntiFraud 2.0 makes the harder case explicit: a legitimate warning call and an impersonation scam can share the same entities, urgency, and risk vocabulary.
+          </p>
+        </div>
+        <p class="note">
+          The benchmark is designed for evaluation, not model training. Each snapshot freezes audio, labels, prompts, responses, and manifests so later snapshots can measure robustness under distribution shift.
+        </p>
+      </div>
+
+      <div class="grid">
+        <article class="card">
+          <h3>Near-domain negatives</h3>
+          <p>Fraud and legitimate branches share profile, opening, and early risk terms, then diverge at controlled decision nodes such as whether independent verification is allowed.</p>
+          <div class="tag-row">
+            <span class="tag">shared-prefix trees</span>
+            <span class="tag">controlled labels</span>
+          </div>
+        </article>
+        <article class="card">
+          <h3>Profile-grounded generation</h3>
+          <p>Six nonoverlapping agents separate caller text, receiver text, caller emotion, receiver emotion, branch expansion, and termination for auditable sample provenance.</p>
+          <div class="tag-row">
+            <span class="tag">six agents</span>
+            <span class="tag">retryable stages</span>
+          </div>
+        </article>
+        <article class="card">
+          <h3>Collapse-aware evaluation</h3>
+          <p>Fraud-class F1 is reported with raw prediction distributions because an all-FRAUD classifier can obtain 0.80 F1 under the 2:1 class ratio.</p>
+          <div class="tag-row">
+            <span class="tag">class counts</span>
+            <span class="tag">snapshot transitions</span>
+          </div>
+        </article>
+      </div>
+    </section>
+
+    <section id="method">
+      <div class="section-head">
+        <div>
+          <h2>Construction Pipeline</h2>
+          <p class="lead">Profiles and mixed plot trees define the benchmark label before synthesis. Emotion and voice controls change delivery, not class membership.</p>
+        </div>
+        <p class="note">A complete tree is bounded at 81 leaves by four expansion levels and at most three children per node; termination, validation, and filtering reduce realized trees.</p>
+      </div>
+
+      <div class="figure">
+        <img src="paper_visual_assets_v5/Figure1_construction/preview/05_final_composite.png" alt="TeleAntiFraud 2.0 construction pipeline from profiles to frozen benchmark snapshot.">
+        <div class="caption">Figure 1. End-to-end generation pipeline, including profile grounding, mixed-tree branching, role-specific emotion control, TTS, quality gates, and frozen evaluation snapshots.</div>
+      </div>
+
+      <div class="pipeline" aria-label="Generation stages">
+        <div class="step"><b>Profile</b><span>Receiver, caller, vulnerability, objectives, and risk nodes.</span></div>
+        <div class="step"><b>Opening</b><span>Identity-neutral turns before the fraud/legitimate split.</span></div>
+        <div class="step"><b>Branch</b><span>Fraud, legitimate, and dead-end continuations are controlled structurally.</span></div>
+        <div class="step"><b>Emotion</b><span>Per-turn affect labels: anger, fear, confusion, relief, urgency, neutral.</span></div>
+        <div class="step"><b>Speech</b><span>Higgs V3 renders 24-kHz role-matched multi-speaker audio.</span></div>
+        <div class="step"><b>Freeze</b><span>Audio, labels, prompts, responses, and manifests become immutable.</span></div>
+      </div>
+    </section>
+
+    <section id="benchmark">
+      <div class="section-head">
+        <div>
+          <h2>Benchmark Contract</h2>
+          <p class="lead">Each released snapshot is a pure test set. There is no benchmark-specific training split, validation split, or in-context demonstration.</p>
+        </div>
+        <p class="note">V1 and V2 keep the same task contract and TTS engine while varying scenario content and speaker assignment.</p>
+      </div>
+
+      <div class="table-wrap">
+        <table>
+          <thead>
+            <tr>
+              <th>Property</th>
+              <th>V1</th>
+              <th>V2</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td>Total / fraud / non-fraud</td>
+              <td>900 / 600 / 300</td>
+              <td>900 / 600 / 300</td>
+            </tr>
+            <tr>
+              <td>Scenario source</td>
+              <td>8 fraud families</td>
+              <td>20 independently authored templates</td>
+            </tr>
+            <tr>
+              <td>Text and tree sample</td>
+              <td>Frozen V1</td>
+              <td>Independent V2</td>
+            </tr>
+            <tr>
+              <td>TTS engine</td>
+              <td>Higgs V3</td>
+              <td>Higgs V3</td>
+            </tr>
+            <tr>
+              <td>Voice assignment</td>
+              <td>V1 pool draw</td>
+              <td>Separate pool draw</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+    </section>
+
+    <section id="results">
+      <div class="section-head">
+        <div>
+          <h2>Main Findings</h2>
+          <p class="lead">The key failure is hidden by aggregate F1: many configurations look competitive because they predict one class for almost every input.</p>
+        </div>
+        <p class="note">Results below summarize the paper draft. Replace or expand them when final human evaluation and release manifests are frozen.</p>
+      </div>
+
+      <div class="grid two">
+        <div class="figure">
+          <img src="paper_visual_assets_v5/remaining_figures/preview/fig2_05_final.png" alt="Prediction collapse and snapshot transition visualization.">
+          <div class="caption">Prediction distributions and V1-to-V2 transitions show recovery, persistence, and shifts to all-FRAUD behavior.</div>
+        </div>
+        <div class="figure">
+          <img src="paper_visual_assets_v5/remaining_figures/preview/fig3_05_final.png" alt="Modality and category diagnostic visualization.">
+          <div class="caption">Controlled diagnostics compare direct audio, ASR transcripts, prompt language, and fraud-family variation.</div>
+        </div>
+      </div>
+
+      <div class="grid" style="margin-top:16px">
+        <article class="card">
+          <h3>21 / 27 severe collapse</h3>
+          <p>On V1, 21 configurations meet the severe-collapse definition, and 25 show substantial class bias.</p>
+        </article>
+        <article class="card">
+          <h3>Only two balanced V1 outputs</h3>
+          <p>StepFun-1o-audio and Claude-Opus-4-CN are the only balanced configurations, with F1 values of 0.610 and 0.403.</p>
+        </article>
+        <article class="card">
+          <h3>Snapshot behavior can reverse</h3>
+          <p>Four collapsed configurations become discriminative on V2, while two move to all-FRAUD output.</p>
+        </article>
+      </div>
+
+      <div class="table-wrap" style="margin-top:16px">
+        <table>
+          <thead>
+            <tr>
+              <th>Analysis</th>
+              <th>Finding</th>
+              <th>Interpretation</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td>Class collapse</td>
+              <td><span class="behavior red">11 all-FRAUD</span> configurations obtain about 0.80 F1.</td>
+              <td>Fraud F1 alone is misleading under the 2:1 class ratio.</td>
+            </tr>
+            <tr>
+              <td>Direct audio vs. ASR</td>
+              <td><span class="behavior teal">+4.2 to +4.3 F1</span> for Gemini direct-audio input.</td>
+              <td>Suggests useful audio information beyond transcript for the matched model.</td>
+            </tr>
+            <tr>
+              <td>Text diversity</td>
+              <td><span class="behavior green">17.8x</span> inter/intra-tree distance ratio.</td>
+              <td>Leaves remain coherent within a storyline while scenarios occupy distinct semantic regions.</td>
+            </tr>
+            <tr>
+              <td>Emotion control</td>
+              <td><span class="behavior gold">max 4.6 F1 points</span> paired per-model change.</td>
+              <td>Emotion changes do not remove the dominant class-default failure modes.</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+    </section>
+
+    <section id="demo">
+      <div class="section-head">
+        <div>
+          <h2>Audio Demo</h2>
+          <p class="lead">Representative synthetic samples are included for quick inspection of multi-speaker, emotion-aware call rendering.</p>
+        </div>
+        <p class="note">All released audio should remain labeled as synthetic fraud-context material. Replace the sample list with final reviewer-safe clips if needed.</p>
+      </div>
+
+      <div class="audio-list">
+        <article class="audio-item">
+          <h3>Bank fraud sample</h3>
+          <p>Short direct-audio demonstration.</p>
+          <audio controls preload="none" src="audio_demo/higgs_bank_fraud.wav"></audio>
+        </article>
+        <article class="audio-item">
+          <h3>Emotion-controlled sample</h3>
+          <p>Speech with explicit affect control.</p>
+          <audio controls preload="none" src="audio_demo/higgs_anger_fear.wav"></audio>
+        </article>
+        <article class="audio-item">
+          <h3>Two-turn paired sample</h3>
+          <p>Role alternation within a short call.</p>
+          <audio controls preload="none" src="audio_demo/higgs_2turn_pairs.wav"></audio>
+        </article>
+        <article class="audio-item">
+          <h3>Tree-generated dialogue</h3>
+          <p>Longer scenario generated from the plot-tree pipeline.</p>
+          <audio controls preload="none" src="audio_demo/higgs_d4_000.wav"></audio>
+        </article>
+      </div>
+    </section>
+
+    <section id="release">
+      <div class="section-head">
+        <div>
+          <h2>Release Plan</h2>
+          <p class="lead">The project page points reviewers to the paper, generation pipeline, audio examples, manifests, and evaluation code once the anonymous release package is finalized.</p>
+        </div>
+        <p class="note">Search this file for <strong>TODO</strong> before publishing publicly.</p>
+      </div>
+
+      <div class="grid">
+        <article class="card">
+          <h3>Benchmark package <span class="todo">TODO</span></h3>
+          <p>Audio, dialogue text, fraud label and rationale, turn-level emotion tags, speaker metadata, snapshot manifests, prompts, and raw responses.</p>
+          <div class="tag-row">
+            <a class="tag" href="dataset_optimization/data/">Local data directory</a>
+            <span class="tag">anonymous link needed</span>
+          </div>
+        </article>
+        <article class="card">
+          <h3>Generation pipeline</h3>
+          <p>Modular code for profile-grounded generation, tree expansion, role-matched TTS, quality control, and benchmark assembly.</p>
+          <div class="tag-row">
+            <a class="tag" href="dataset_optimization/">Pipeline directory</a>
+            <a class="tag" href="dataset_optimization/README.md">Pipeline README</a>
+          </div>
+        </article>
+        <article class="card">
+          <h3>Evaluation scripts</h3>
+          <p>Unified direct-audio and Whisper-ASR+LLM evaluation wrappers with prompt-language control and collapse-aware reporting.</p>
+          <div class="tag-row">
+            <a class="tag" href="run_v2_full_eval.py">V2 eval script</a>
+            <a class="tag" href="run_v2_eval.py">Eval helper</a>
+          </div>
+        </article>
+      </div>
+    </section>
+
+    <section id="ethics">
+      <div class="section-head">
+        <div>
+          <h2>Ethics and Use</h2>
+          <p class="lead">TeleAntiFraud 2.0 is intended for defensive evaluation of fraud detection systems.</p>
+        </div>
+        <p class="note">The page keeps the same framing as the paper draft: synthetic data, no real call recordings, and explicit restrictions against misuse.</p>
+      </div>
+
+      <div class="grid two">
+        <article class="card">
+          <h3>Synthetic and labeled</h3>
+          <p>All dialogues and audio are synthetic. No real call recordings or personal data are included, and released audio should preserve fraud-context labels and warnings.</p>
+        </article>
+        <article class="card">
+          <h3>Defensive-use restrictions</h3>
+          <p>The intended usage agreement prohibits targeting real individuals, training fraud-generation systems, or redistributing samples outside defensive research context.</p>
+        </article>
+      </div>
+    </section>
+
+    <section id="citation">
+      <div class="section-head">
+        <div>
+          <h2>Citation</h2>
+          <p class="lead">Use this placeholder BibTeX for the review package. Replace venue details and URL after acceptance or release.</p>
+        </div>
+      </div>
+
+      <pre><code>@inproceedings{anonymous2027teleantifraud2,
+  title     = {TeleAntiFraud 2.0: A Dynamic, Profile-Grounded, and Emotion-Aware Benchmark for Audio-Based Telecom Fraud Detection},
+  author    = {Liu, Huiyuan and Ma, Zhiming and Zhang, Shun},
+  booktitle = {Proceedings of the AAAI Conference on Artificial Intelligence},
+  year      = {2027},
+  url       = {TODO}
+}</code></pre>
+    </section>
+  </main>
+
+  <footer class="footer">
+    <strong>TeleAntiFraud 2.0.</strong> Anonymous AAAI submission project page. Last updated for the local draft package on 2026-07-15.
+  </footer>
+</body>
+</html>
+
+

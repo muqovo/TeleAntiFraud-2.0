@@ -1,4 +1,4 @@
-# TeleAntiFraud 2.0 Pipeline
+﻿# TeleAntiFraud-2.0
 
 This repository contains the code-focused release pipeline for TeleAntiFraud 2.0: mixed-tree dialogue generation, Higgs V3 speech synthesis, audio quality gates, frozen snapshot manifests, and evaluation utilities.
 
@@ -20,9 +20,24 @@ python -m venv .venv
 pip install -e .
 ```
 
-Install `openai` separately if you want to run `scripts/run_text_eval.py`.
+Install `openai` separately if you want to run API generation or text evaluation:
 
-## Demo
+```bash
+pip install -r requirements-api.txt
+```
+
+## Paper Pipeline
+
+The paper-aligned path uses API generation first. Full commands are documented in `docs/paper_pipeline_commands.md`.
+
+```bash
+python scripts/run_generation_api.py --config configs/pipeline.api.example.yaml
+python scripts/run_higgs_tts.py --config configs/pipeline.api.example.yaml
+python scripts/build_snapshot.py --config configs/pipeline.api.example.yaml
+python scripts/run_baseline_eval.py --snapshot outputs/api_demo/snapshot_manifest.json
+```
+
+## Offline Smoke Demo
 
 Generate a tiny mixed-tree dialogue set:
 
@@ -37,21 +52,6 @@ python scripts/build_snapshot.py --config configs/pipeline.demo.yaml
 python scripts/run_baseline_eval.py --snapshot outputs/demo/snapshot_manifest.json
 ```
 
-Run Higgs V3 synthesis when a compatible endpoint is available:
-
-```bash
-export HIGGS_TTS_API_URL="http://HOST:PORT/v1/audio/speech"
-python scripts/run_higgs_tts.py --config configs/pipeline.demo.yaml
-python scripts/build_snapshot.py --config configs/pipeline.demo.yaml
-```
-
-Run an OpenAI-compatible text evaluation:
-
-```bash
-export OPENAI_API_KEY="..."
-python scripts/run_text_eval.py --config configs/pipeline.demo.yaml
-```
-
 ## Repository Layout
 
 ```text
@@ -64,7 +64,7 @@ src/          installable Python package
 
 ## Paper Alignment
 
-- Profile-grounded mixed plot tree: `teleantifraud2_pipeline.generation`
+- Profile-grounded mixed plot tree: `teleantifraud2_pipeline.llm_generation`
 - Higgs V3 role/emotion speech: `teleantifraud2_pipeline.tts_higgs`
 - Fixed audio corruption gates: `teleantifraud2_pipeline.quality`
 - Versioned pure-test manifest: `teleantifraud2_pipeline.snapshot`
